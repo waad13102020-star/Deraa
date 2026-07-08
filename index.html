@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>درع - نظام تقييم المخاطر المؤسسية</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="app">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="logo-mark"></span>
+        <div>
+          <div class="brand-title">درع</div>
+          <div class="brand-subtitle">نظام تقييم المخاطر المؤسسية</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-section="dashboard">لوحة التحكم</button>
+        <button class="nav-item" data-section="cyber">الأمن السيبراني</button>
+        <button class="nav-item" data-section="hr">الموارد البشرية</button>
+        <button class="nav-item" data-section="governance">الحوكمة</button>
+        <button class="nav-item" data-section="compliance">الامتثال التنظيمي</button>
+        <button class="nav-item" data-section="operational">المخاطر التشغيلية</button>
+        <button class="nav-item" data-section="reports">بلاغات سرية</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="overall-chip">
+          <span>المؤشر العام</span>
+          <strong id="overallChipValue">—</strong>
+        </div>
+        <button id="resetBtn" class="reset-btn">إعادة تعيين البيانات</button>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <section id="dashboard" class="page active">
+        <div class="section-header">
+          <h2>لوحة التحكم</h2>
+          <p>نظرة شاملة على المؤشر العام لصحة المؤسسة عبر خمسة محاور رئيسية</p>
+        </div>
+
+        <div class="dashboard-top">
+          <div class="card shield-card">
+            <div class="card-label">المؤشر العام لصحة المؤسسة</div>
+            <div id="overallCircle" class="score-circle">
+              <div class="score-circle-inner">
+                <span id="overallScoreText">—</span>
+                <small>من 100</small>
+              </div>
+            </div>
+            <div id="overallCaption" class="shield-caption">لا توجد بيانات بعد</div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">التوزيع حسب المحاور الخمسة</div>
+            <div id="categoryBars" class="bars"></div>
+          </div>
+        </div>
+
+        <div class="score-grid" id="scoreGrid"></div>
+
+        <div class="card">
+          <div class="card-label">النشاط الأخير</div>
+          <ul id="recentActivityList" class="activity-list"></ul>
+        </div>
+      </section>
+
+      <section id="cyber" class="page">
+        <div class="section-header">
+          <h2>الأمن السيبراني</h2>
+          <p>أدخل نتائج فحص النطاق للحصول على درجة المخاطر الأمنية</p>
+        </div>
+
+        <form id="cyberForm" class="card">
+          <div class="form-grid">
+            <label class="field">
+              <span>النطاق (Domain)</span>
+              <input type="text" id="cyberDomain" placeholder="example.com" />
+            </label>
+            <label class="field">
+              <span>حالة شهادة SSL</span>
+              <select id="cyberSsl">
+                <option value="valid">سارية وصحيحة</option>
+                <option value="expiring">قاربة على الانتهاء</option>
+                <option value="invalid">غير سارية / غير موجودة</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>عدد المنافذ المفتوحة</span>
+              <input type="number" id="cyberPorts" min="0" value="2" />
+            </label>
+            <label class="field">
+              <span>ثغرات حرجة (Critical)</span>
+              <input type="number" id="cyberCritical" min="0" value="0" />
+            </label>
+            <label class="field">
+              <span>ثغرات عالية (High)</span>
+              <input type="number" id="cyberHigh" min="0" value="0" />
+            </label>
+            <label class="field">
+              <span>ثغرات متوسطة (Medium)</span>
+              <input type="number" id="cyberMedium" min="0" value="0" />
+            </label>
+            <label class="field">
+              <span>ثغرات منخفضة (Low)</span>
+              <input type="number" id="cyberLow" min="0" value="0" />
+            </label>
+          </div>
+          <p id="cyberError" class="form-error"></p>
+          <button type="submit" class="btn btn-primary">تسجيل نتيجة الفحص</button>
+        </form>
+
+        <div class="card">
+          <div class="card-label">سجل الفحوصات</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>التاريخ</th><th>النطاق</th><th>SSL</th><th>المنافذ</th><th>الثغرات</th><th>الدرجة</th></tr>
+              </thead>
+              <tbody id="cyberHistoryBody"></tbody>
+            </table>
+          </div>
+          <p id="cyberEmpty" class="empty-state">لم يتم تسجيل أي فحص أمني بعد.</p>
+        </div>
+      </section>
+
+      <section id="hr" class="page">
+        <div class="section-header">
+          <h2>الموارد البشرية</h2>
+          <p>تحليل تنبؤي لمؤشرات الإنذار المبكر المرتبطة بالاستقرار الوظيفي</p>
+        </div>
+
+        <form id="hrForm" class="card">
+          <div class="form-grid">
+            <label class="field">
+              <span>معدل الاستقالات السنوي (%)</span>
+              <input type="number" id="hrResignation" min="0" />
+            </label>
+            <label class="field">
+              <span>معدل الغياب (%)</span>
+              <input type="number" id="hrAbsenteeism" min="0" />
+            </label>
+            <label class="field">
+              <span>نسبة التفاوت في الرواتب (%)</span>
+              <input type="number" id="hrSalaryVariance" min="0" />
+            </label>
+            <label class="field">
+              <span>متوسط بقاء الموظف (سنوات)</span>
+              <input type="number" id="hrTenure" min="0" step="0.1" />
+            </label>
+          </div>
+          <p id="hrError" class="form-error"></p>
+          <button type="submit" class="btn btn-primary">تسجيل التقييم</button>
+        </form>
+
+        <div class="card">
+          <div class="card-label">سجل التقييمات</div>
+          <ul id="hrHistoryList" class="hr-history"></ul>
+          <p id="hrEmpty" class="empty-state">لم يتم تسجيل أي تقييم للموارد البشرية بعد.</p>
+        </div>
+      </section>
+
+      <section id="governance" class="page">
+        <div class="section-header">
+          <h2>الحوكمة</h2>
+          <p>قائمة تحقق لممارسات الحوكمة المؤسسية الأساسية</p>
+        </div>
+
+        <div class="card">
+          <div class="checklist-score-row">
+            <span>درجة الحوكمة الحالية</span>
+            <span id="governanceScoreBadge" class="badge">0/100</span>
+          </div>
+
+          <div class="checklist" id="governanceChecklist">
+            <label class="checklist-row"><input type="checkbox" id="gov_board_independence" /> <span>أعضاء مستقلون في مجلس الإدارة</span></label>
+            <label class="checklist-row"><input type="checkbox" id="gov_documented_policies" /> <span>سياسات وإجراءات داخلية موثقة ومعتمدة</span></label>
+            <label class="checklist-row"><input type="checkbox" id="gov_audit_committee" /> <span>وجود لجنة تدقيق داخلي فعّالة</span></label>
+            <label class="checklist-row"><input type="checkbox" id="gov_whistleblower_policy" /> <span>سياسة معتمدة لحماية المبلّغين</span></label>
+            <label class="checklist-row"><input type="checkbox" id="gov_conflict_of_interest" /> <span>إفصاح دوري عن تعارض المصالح</span></label>
+            <label class="checklist-row"><input type="checkbox" id="gov_risk_committee" /> <span>لجنة مخاطر مؤسسية نشطة</span></label>
+            <label class="checklist-row"><input type="checkbox" id="gov_succession_planning" /> <span>خطة واضحة لتعاقب القيادات</span></label>
+            <label class="checklist-row"><input type="checkbox" id="gov_code_of_conduct" /> <span>مدونة سلوك مؤسسي يوقّع عليها جميع الموظفين</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section id="compliance" class="page">
+        <div class="section-header">
+          <h2>الامتثال التنظيمي</h2>
+          <p>تتبّع تلقائي لبنود الامتثال وفق الأطر والأنظمة ذات الصلة</p>
+        </div>
+
+        <div class="card">
+          <div class="checklist-score-row">
+            <span>نسبة الامتثال الحالية</span>
+            <span id="complianceScoreBadge" class="badge">0/100</span>
+          </div>
+        </div>
+
+        <div class="card" id="complianceChecklist">
+          <div class="card-label">ISO/IEC 27005</div>
+          <div class="checklist">
+            <label class="checklist-row"><input type="checkbox" id="comp_iso_risk_assessment" /> <span>تنفيذ تقييم دوري لمخاطر أمن المعلومات</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_iso_asset_inventory" /> <span>حصر موثّق لأصول المعلومات الحساسة</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_iso_treatment_plan" /> <span>خطة معتمدة لمعالجة المخاطر المحددة</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_iso_review" /> <span>مراجعة سنوية لسياسة أمن المعلومات</span></label>
+          </div>
+
+          <div class="card-label" style="margin-top:20px">إطار COSO</div>
+          <div class="checklist">
+            <label class="checklist-row"><input type="checkbox" id="comp_coso_control_env" /> <span>بيئة رقابة داخلية معرّفة بوضوح</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_coso_risk_response" /> <span>آلية موثقة للاستجابة للمخاطر</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_coso_monitoring" /> <span>أنشطة مراقبة مستمرة للضوابط الداخلية</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_coso_reporting" /> <span>تقارير دورية للإدارة العليا عن أداء الرقابة</span></label>
+          </div>
+
+          <div class="card-label" style="margin-top:20px">الأنظمة المحلية</div>
+          <div class="checklist">
+            <label class="checklist-row"><input type="checkbox" id="comp_local_data_protection" /> <span>الامتثال لنظام حماية البيانات الشخصية (PDPL)</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_local_labor_law" /> <span>الامتثال لأنظمة العمل ومكتب العمل السعودي</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_local_zakat_tax" /> <span>الامتثال لأنظمة الزكاة والضريبة</span></label>
+            <label class="checklist-row"><input type="checkbox" id="comp_local_sector" /> <span>الامتثال لمتطلبات الجهات الرقابية القطاعية</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section id="operational" class="page">
+        <div class="section-header">
+          <h2>المخاطر التشغيلية</h2>
+          <p>قياس استقرار العمليات بناءً على التوقف والحوادث ومستوى نضج العمليات</p>
+        </div>
+
+        <form id="operationalForm" class="card">
+          <div class="form-grid">
+            <label class="field">
+              <span>ساعات التوقف الشهرية</span>
+              <input type="number" id="opDowntime" min="0" />
+            </label>
+            <label class="field">
+              <span>عدد الحوادث التشغيلية الشهرية</span>
+              <input type="number" id="opIncidents" min="0" />
+            </label>
+            <label class="field">
+              <span>مستوى نضج العمليات</span>
+              <select id="opMaturity">
+                <option value="1">1 — مبدئي</option>
+                <option value="2">2 — متكرر</option>
+                <option value="3" selected>3 — معرَّف</option>
+                <option value="4">4 — مُدار</option>
+                <option value="5">5 — مُحسَّن</option>
+              </select>
+            </label>
+          </div>
+          <p id="opError" class="form-error"></p>
+          <button type="submit" class="btn btn-primary">تسجيل التقييم</button>
+        </form>
+
+        <div class="card">
+          <div class="card-label">سجل التقييمات التشغيلية</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>التاريخ</th><th>ساعات التوقف</th><th>الحوادث</th><th>مستوى النضج</th><th>الدرجة</th></tr></thead>
+              <tbody id="operationalHistoryBody"></tbody>
+            </table>
+          </div>
+          <p id="opEmpty" class="empty-state">لم يتم تسجيل أي تقييم تشغيلي بعد.</p>
+        </div>
+      </section>
+
+      <section id="reports" class="page">
+        <div class="section-header">
+          <h2>بلاغات سرية</h2>
+          <p>قناة داخلية للإبلاغ عن المخالفات مع الحفاظ على خصوصية المُبلّغ</p>
+        </div>
+
+        <form id="reportForm" class="card">
+          <p class="confidential-note">هذا نموذج توضيحي لبوابة تبليغ سرية ضمن مشروع التخرج — في بيئة تشغيل فعلية تُشفَّر البلاغات ويقتصر الوصول إليها على لجنة المراجعة المخوّلة فقط.</p>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>نوع البلاغ</span>
+              <select id="reportCategory">
+                <option>مخالفة مالية أو فساد</option>
+                <option>تحرش أو تمييز</option>
+                <option>انتهاك لسياسات الشركة</option>
+                <option>مخاوف متعلقة بالسلامة</option>
+                <option>تضارب مصالح</option>
+                <option>أخرى</option>
+              </select>
+            </label>
+            <label class="field field-wide">
+              <span>وصف البلاغ</span>
+              <textarea id="reportDescription" rows="4" placeholder="صف ما حدث بأكبر قدر ممكن من التفاصيل..."></textarea>
+            </label>
+            <label class="field checkbox-field">
+              <input type="checkbox" id="reportAnonymous" checked />
+              <span>إرسال البلاغ دون الكشف عن هويتي</span>
+            </label>
+          </div>
+          <p id="reportError" class="form-error"></p>
+          <p id="reportSuccess" class="form-success" style="display:none">تم إرسال البلاغ بأمان. سيتم مراجعته من قبل اللجنة المخوّلة.</p>
+          <button type="submit" class="btn btn-primary">إرسال البلاغ</button>
+        </form>
+
+        <div class="card">
+          <div class="card-label">البلاغات المسجّلة</div>
+          <ul id="reportsList" class="reports-list"></ul>
+          <p id="reportsEmpty" class="empty-state">لا توجد بلاغات مسجّلة حتى الآن.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
